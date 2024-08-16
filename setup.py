@@ -13,7 +13,8 @@ setup(
     long_description=open('README.md', 'r').read(),
     long_description_content_type='text/markdown',
     url='https://github.com/yourusername/your-repo-name',
-    packages=find_packages(),
+    packages=['hyperp'],
+    # packages=find_packages(),
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

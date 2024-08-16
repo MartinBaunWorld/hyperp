@@ -48,3 +48,4 @@ def httpie(response, *args, **kwargs):
             httpie_cmd += f"    {data}"
     
     print(httpie_cmd.strip())
+    print('\n\n')
