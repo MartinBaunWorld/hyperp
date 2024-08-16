@@ -1,0 +1,20 @@
+#!/bin/bash
+
+set -e
+
+rm -rf build dist
+
+echo Upping version..
+python3 up_version.py
+
+echo ""
+echo Building...
+python3 -m build
+
+echo ""
+echo Uploading...
+python3 -m twine upload --verbose --repository  pypi dist/*
+
+git add VERSION.txt
+git commit -m "version updated";
+git push
