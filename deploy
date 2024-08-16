@@ -15,10 +15,9 @@ echo ""
 echo Uploading...
 python3 -m twine upload --verbose --repository  pypi dist/*
 
-pip install --upgrade hyperp
-python -c "from hyperp.play import httpie"
-exit
 
 git add VERSION.txt
 git commit -m "version updated";
 git push
+
+pip install --upgrade hyperp
