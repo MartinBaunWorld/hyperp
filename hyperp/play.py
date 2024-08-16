@@ -1,38 +1,50 @@
+import json
 import requests
 
 
-class Play:
-    """
-        Thin wrapper that hels you play with an API
-        while at the same time make documentation for it
-        in form of httpie/bash scripts
-        Experimental and will not be backward compatible
-    """
-    def __init__(self, url):
-        self.url = url
+def _format_json_value(value):
+    """Format JSON values to be compatible with HTTPie syntax."""
+    if isinstance(value, dict):
+        return f":='{json.dumps(value)}'"
+    elif isinstance(value, list):
+        return f":='{json.dumps(value)}'"
+    elif isinstance(value, bool):
+        return ':=true' if value else ':=false'
+    elif isinstance(value, (int, float)):
+        return f":={value}"
+    elif value is None:
+        return 'null'
+    else:
+        return f'"{value}"'
 
-    def post(self, path, json, auth=None):
-        headers = {}
-        args = []
 
-        if auth:
-            headers['authorization'] = auth
-            args.append(f'"authorization: {auth}"')
-
-        r = requests.post(
-            f'{self.url}{path}',
-            json=json,
-            headers=headers,
-        ).json()
-
-        for k, v in json.items():
-            args.append(f'{k}={v}')
-
-        print(f'http POST {self.url}{path} \\')
-        print('\t' + ' \\\n\t'.join(args))
-        print('')
-        print(r)
-        print('')
-        print('')
-        print('#' + '-' * 10)
-        return r
+def httpie(response, *args, **kwargs):
+    method = response.request.method
+    url = response.request.url
+    headers = response.request.headers
+    data = response.request.body
+    
+    httpie_cmd = f"http {method.lower()} {url} \\\n"
+    
+    if headers:
+        for k, v in headers.items():
+            httpie_cmd += f"    '{k}: {v}' \\\n"
+    
+    if data:
+        content_type = headers.get('Content-Type', '')
+        
+        if 'application/json' in content_type:
+            # JSON data
+            json_data = json.loads(data)
+            data_pairs = [f"{k}={_format_json_value(v)}" if isinstance(v, str) else f"{k}{_format_json_value(v)}" for k, v in json_data.items()]
+            httpie_cmd += f"    {' '.join(data_pairs)}"
+        elif 'application/x-www-form-urlencoded' in content_type:
+            # Form data
+            data_pairs = [f"{k}={v}" for k, v in [pair.split('=') for pair in data.split('&')]]
+            httpie_cmd += f"    {' '.join(data_pairs)}"
+        else:
+            # Other types of data (raw body, etc.)
+            # TODO this have not yet been tested
+            httpie_cmd += f"    {data}"
+    
+    print(httpie_cmd.strip())
