@@ -200,3 +200,10 @@ def read(path, default):
             return f.read()
     except:
         return default
+
+
+def loads(data, default):
+    try:
+        return json.loads(data)
+    except:  # noqa
+        return default
