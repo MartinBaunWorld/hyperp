@@ -202,8 +202,10 @@ def read(path, default):
         return default
 
 
-def loads(data, default):
+def loads(data, default, on_error=None):
     try:
         return json.loads(data)
     except:  # noqa
+        if on_error and callable(on_error):
+            on_error()
         return default

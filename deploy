@@ -15,9 +15,5 @@ echo ""
 echo Uploading...
 python3 -m twine upload --verbose --repository  pypi dist/*
 
-
-git add VERSION.txt
-git commit -m "version updated";
-git push
-
+sleep 5
 pip install --upgrade hyperp
