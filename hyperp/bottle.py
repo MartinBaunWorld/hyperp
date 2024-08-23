@@ -10,6 +10,7 @@ from .docs import DOCS
 from enum import Enum
 import tempfile
 
+from uuid import uuid4
 
 # TODO: rpc msg on errors
 
