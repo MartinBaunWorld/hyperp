@@ -1,11 +1,15 @@
 import inspect
+from zipfile import ZipFile
+import os
 from functools import wraps
 from traceback import format_exc
 from datetime import datetime
 from bottle import post, request, HTTPResponse, response, hook
-from .utils import to_int, dumps, is_ip
+from .utils import to_int, dumps, is_ip, rmdir, mkdir
 from .docs import DOCS
 from enum import Enum
+import tempfile
+
 
 # TODO: rpc msg on errors
 
