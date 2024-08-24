@@ -1,16 +1,18 @@
+import os
 import inspect
 from zipfile import ZipFile
-import os
 from functools import wraps
 from traceback import format_exc
 from datetime import datetime
+import tempfile
+from uuid import uuid4
+
 from bottle import post, request, HTTPResponse, response, hook
+from bottle import get as bottleget
+
 from .utils import to_int, dumps, is_ip, rmdir, mkdir
 from .docs import DOCS
 from enum import Enum
-import tempfile
-
-from uuid import uuid4
 
 # TODO: rpc msg on errors
 
@@ -144,6 +146,23 @@ def _get_request_data():
         return {}
 
 
+def get(path, checker=None):
+    def decorator(func):
+     
+        @wraps(func)
+        @bottleget(path)
+        def wrapper(*args, **kwargs):
+            checked = checker() if checker else ''
+            if checked:
+                response.status = 401
+                return checked
+
+            return func(*args, **kwargs)
+        
+        return wrapper
+    return decorator
+
+
 def rpc(path, checker=None):
     def decorator(func):
         sig = _get_sig(func)
@@ -221,6 +240,8 @@ def get_token():
             replace('BEARER', '').
             strip()
         )
+    elif 'token' in request.cookies:
+        return request.cookies['token']
     elif "multipart/form-data" in str(request.content_type):
         return request.forms.get("authorization")
 
