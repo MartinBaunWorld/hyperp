@@ -7,6 +7,16 @@ from traceback import format_exc
 from datetime import datetime
 
 
+def check_form(Model, data):
+    from pydantic import ValidationError # noqa
+    try:
+        form = Model(**data)
+        return form, None
+    except ValidationError as e:
+        errors = e.errors()
+        return None, errors
+
+
 def sanitize(filename):
     """Return a fairly safe version of the filename.
 
@@ -56,6 +66,14 @@ def sanitize(filename):
 
 def mkdir(path):
     return pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+
+
+def mkdir_file(file_path):
+    return (
+        pathlib.
+        Path(file_path).
+        parent.
+        mkdir(parents=True, exist_ok=True))
 
 
 def rmdir(path):
