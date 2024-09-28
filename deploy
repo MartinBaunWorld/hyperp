@@ -15,5 +15,5 @@ echo ""
 echo Uploading...
 python3 -m twine upload --verbose --repository  pypi dist/*
 
-sleep 5
+sleep 10
 pip install --upgrade hyperp

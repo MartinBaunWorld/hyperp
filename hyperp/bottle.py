@@ -10,7 +10,7 @@ from uuid import uuid4
 from bottle import post, request, HTTPResponse, response, hook
 from bottle import get as bottleget
 
-from .utils import to_int, dumps, is_ip, rmdir, mkdir
+from .utils import to_int, dumps, is_ip4, rmdir, mkdir
 from .docs import DOCS
 from enum import Enum
 
@@ -330,7 +330,7 @@ def get_ip():
             if ',' in ip:
                 ip = ip.split(',')[0]
 
-            if not is_ip(ip):
+            if not is_ip4(ip):
                 continue
 
             return ip
@@ -381,3 +381,18 @@ def install_peewee(db):
     def _db_close():
         if not db.is_closed():
             db.close()
+
+
+def cache(hours=None, days=None):
+    if hours is None and days is None:
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+        return
+
+    time = 0
+    if hours:
+        time += hours * 60 * 60
+
+    if days:
+        time += days * 60 * 60 * 24
+
+    response.set_header('Cache-Control', f'public, max-age={time}')
