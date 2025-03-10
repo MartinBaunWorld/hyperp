@@ -67,7 +67,7 @@ def get_str(name, default):
 
 
 def get_bool(name, default):
-    return _config.get(name, default).lower() == "true"
+    return _config.get(name, default)
 
 
 if __name__ == "__main__":
