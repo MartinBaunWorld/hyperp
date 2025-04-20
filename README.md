@@ -1,68 +1,78 @@
 # Hyperp
 
-hyperp  will make your life easier by having simple utility functions ready.
+hyperp will make your life easier by having simple utility functions ready.
+In general, this library favors defaults over exceptions.
+So, for example read will read a file or return a default.
+This ensures you take care of edge cases without having to worry about exceptions or other implicit errors.
 
 
-## Documentation by example
+## General Utility Functions
+Documentation by example
 
 ```python
-# -- to_int: Convert to int, or return default on failure --
-from hyperp import to_int
+from hyperp import *
 
+
+# -- to_int: Convert to int, or return default on failure --
 to_int("42", 0)     # 42
 to_int("x", 0)      # 0
 to_int(None, -1)    # -1
 
 # -- is_int: Check if input is an integer --
-from hyperp import is_int
-
 is_int("123")       # True
 is_int("abc")       # False
 
 # -- is_float: Check if input is a float --
-from hyperp import is_float
-
 is_float("3.14")    # True
 is_float("hello")   # False
 
 # -- is_ip4: Check if input is a valid IPv4 address --
-from hyperp import is_ip4
-
 is_ip4("192.168.1.1")   # True
 is_ip4("999.999.0.1")   # False
 
 # -- mkdir: Create a directory and all parents if needed --
-from hyperp import mkdir
-
 mkdir("path/to/dir")
 
 # -- mkdir_file: Create parent directories for a file path --
-from hyperp import mkdir_file
-
 mkdir_file("logs/output.log")  # Creates the 'logs' directory if missing
 
 # -- write: Write string data to a file, creating dirs if needed --
-from hyperp import write
-
 write("out/data.txt", "hello world")
 
 # -- read: Read a file, return default on error --
-from hyperp import read
-
 read("out/data.txt", "default")    # "hello world" or "default" if not found
 
 # -- rmdir: Remove a directory and its contents, ignore errors --
-from hyperp import rmdir
-
 rmdir("path/to/remove")
 
 # -- sanitize: Make filename safe for storage/use --
-from hyperp import sanitize
-
 sanitize("my*unsafe:file?.txt")    # "myunsafefile.txt"
 
 # -- send_file: Upload file to a URL as multipart/form-data --
-from hyperp import send_file
-
 send_file("https://example.com/upload", "report.pdf")  # Returns dict with msg and response
+```
+
+
+## Django specific
+
+Documentation by example
+
+```python3
+
+from hyperp.django import *
+
+# -- cache: Shorthand for Django's cache_control with flexible time units --
+@cache(seconds=30, minutes=5, hours=1, days=1, public=False)
+def my_view(request):
+    ...
+
+# -- get_csrf: Return CSRF token input element for forms --
+def form_view(request):
+    csrf = get_csrf(request)
+    return HttpResponse(f"<form>{csrf}<input name='x'></form>")
+
+# -- get_ip: Extract client IP address from request headers --
+def log_request(request):
+    ip = get_ip(request)
+    # Use the IP (e.g., for logging, rate limiting, etc.)
 ```
