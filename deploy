@@ -3,17 +3,25 @@
 set -e
 
 rm -rf build dist
+source venv/bin/activate
 
 echo Upping version..
-python3 up_version.py
+python up_version.py
+
+pip install --upgrade pip setuptools wheel twine
+python setup.py sdist bdist_wheel
+twine upload dist/*
+
+exit
 
 echo ""
 echo Building...
-python3 -m build
+python -m build
+
 
 echo ""
 echo Uploading...
-python3 -m twine upload --verbose --repository  pypi dist/*
+python -m twine upload --verbose --repository  pypi dist/*
 
 sleep 10
 pip install --upgrade hyperp
