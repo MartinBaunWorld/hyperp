@@ -36,6 +36,11 @@ from hyperp import mkdir
 
 mkdir("path/to/dir")
 
+# -- mkdir_file: Create parent directories for a file path --
+from hyperp import mkdir_file
+
+mkdir_file("logs/output.log")  # Creates the 'logs' directory if missing
+
 # -- write: Write string data to a file, creating dirs if needed --
 from hyperp import write
 
