@@ -5,7 +5,7 @@ hyperp  will make your life easier by having simple utility functions ready.
 
 ## Documentation by example
 
-```
+```python
 # -- to_int: Convert to int, or return default on failure --
 from hyperp import to_int
 
