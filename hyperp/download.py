@@ -2,6 +2,7 @@ from requests import get
 
 
 def download(url, dst, default="", chunk_size=8192):
+    from hyper import mkdir_file
     """Download file from URL to destination path, streaming for large files"""
     try:
         mkdir_file(dst)  # Create parent dirs if needed
