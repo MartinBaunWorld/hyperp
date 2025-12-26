@@ -52,6 +52,10 @@ sanitize("my*unsafe:file?.txt")    # "myunsafefile.txt"
 # send_file: Upload file to a URL as multipart/form-data
 send_file("https://example.com/upload", "report.pdf")  # Returns dict with msg and response
 
+# download: Download file from URL to disk, streaming for efficiency
+download("https://example.com/image.jpg", "images/photo.jpg")  # Returns "images/photo.jpg"
+download("https://bad-url.com/file.pdf", "out.pdf", "")        # Returns "" on error
+
 # throttle_call: Limit function execution to once per N seconds
 def load_data():
     return fetch_from_api()

@@ -11,3 +11,4 @@ from .to_int import to_int
 from .send_file import send_file
 from .timer import *
 from .throttle_call import *
+from .download import *
