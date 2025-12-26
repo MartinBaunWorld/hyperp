@@ -1,26 +1,18 @@
 # Hyperp - hyper productive utility functions for Python
-
 Hyperp is a small utility library designed to simplify everyday coding tasks.  
-It embraces safe defaults over exceptions — for example, `read()` returns a default value if the file can’t be read, helping you gracefully handle edge cases without extra boilerplate.
+It embraces safe defaults over exceptions — for example, `read()` returns a default value if the file can't be read, helping you gracefully handle edge cases without extra boilerplate.
 
 # Purpose
-
 I run a software consultancy where we build products for clients and internal projects.  
 To stay Hyper Productive (hence "hyperp"), I created this library to streamline development and encourage safer patterns.  
-
 It also helps my team write more robust code with minimal effort.
 
 Need simple, beautiful software frontend, backend or design? Checkout [BaunIT.com](https://baunit.com)
 
-
-
-
 ## General Utility Functions
 Documentation by example
-
 ```python
 from hyperp import *
-
 
 # to_int: Convert to int, or return default on failure
 to_int("42", 0)     # 42
@@ -59,15 +51,28 @@ sanitize("my*unsafe:file?.txt")    # "myunsafefile.txt"
 
 # send_file: Upload file to a URL as multipart/form-data
 send_file("https://example.com/upload", "report.pdf")  # Returns dict with msg and response
+
+# throttle_call: Limit function execution to once per N seconds
+def load_data():
+    return fetch_from_api()
+
+throttle_call(load_data, 5)  # Executes
+throttle_call(load_data, 5)  # Returns None (too soon)
+time.sleep(5)
+throttle_call(load_data, 5)  # Executes again
+
+# timer: Decorator to measure function execution time
+@timer
+def slow_function():
+    time.sleep(1)
+    return "done"
+
+slow_function()  # Prints: "slow_function took 1.0001 seconds"
 ```
 
-
 ## Django specific
-
 Documentation by example
-
 ```python3
-
 from hyperp.django import *
 
 # cache: Shorthand for Django's cache_control with flexible time units
